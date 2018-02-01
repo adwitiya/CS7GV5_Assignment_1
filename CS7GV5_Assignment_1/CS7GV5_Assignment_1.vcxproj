@@ -18,6 +18,19 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="maths_funcs.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="filesystem.h" />
+    <ClInclude Include="maths_funcs.h" />
+    <ClInclude Include="mesh.h" />
+    <ClInclude Include="model.h" />
+    <ClInclude Include="root_directory.h" />
+    <ClInclude Include="shader_m.h" />
+    <ClInclude Include="stb_image.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{E8D01B13-4E46-4A29-8F1E-64B7412DE95E}</ProjectGuid>
@@ -76,7 +89,8 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\stackoverflow\Desktop\lib;C:\Users\stackoverflow\Desktop\lib\glew-1.10.0\include;C:\Users\stackoverflow\Desktop\lib\freeglut\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\stackoverflow\source\repos\CS7GV5_Assignment_1\include;C:\Users\stackoverflow\Desktop\lib;C:\Users\stackoverflow\Desktop\lib\glew-1.10.0\include;C:\Users\stackoverflow\Desktop\lib\freeglut\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>C:\Users\stackoverflow\Downloads\LearnOpenGL-master\LearnOpenGL-master\lib\assimp;C:\Users\stackoverflow\Desktop\lib\glew-1.10.0\lib\Release\Win32;C:\Users\stackoverflow\Desktop\lib\freeglut\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -119,16 +133,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\..\..\Desktop\Real-Time-Animation-and-Rendering\Assignment 1\main.cpp" />
-    <ClCompile Include="..\..\..\..\Desktop\Real-Time-Animation-and-Rendering\Assignment 1\maths_funcs.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\..\..\Desktop\Real-Time-Animation-and-Rendering\Assignment 1\maths_funcs.h" />
-    <ClInclude Include="..\..\..\..\Desktop\Real-Time-Animation-and-Rendering\Assignment 1\mesh.h" />
-    <ClInclude Include="..\..\..\..\Desktop\Real-Time-Animation-and-Rendering\Assignment 1\model.h" />
-    <ClInclude Include="..\..\..\..\Desktop\Real-Time-Animation-and-Rendering\Assignment 1\stb_image.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

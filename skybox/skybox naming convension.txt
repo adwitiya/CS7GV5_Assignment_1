@@ -1,0 +1,6 @@
+loadTexture( 'px.jpg' ), // right
+loadTexture( 'nx.jpg' ), // left
+loadTexture( 'py.jpg' ), // top
+loadTexture( 'ny.jpg' ), // bottom
+loadTexture( "pz.jpg" ), // back
+loadTexture( 'nz.jpg' ) // front

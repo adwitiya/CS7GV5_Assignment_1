@@ -1,4 +1,14 @@
 
+#/*********************************************************************/
+//   source.cpp -- Implementation of OpenGL using C++				   *
+//		 Author:  Adwitiya Chakraborty                                 *
+//                                                                     *
+//      Purpose: Evaluate OpenGL shading techniques using C++		   *
+//                                                                     *
+// GitHub Repo : https://github.com/adwitiya                 		   *
+//		 Email : chakraad@tcd.ie									   *
+//  Build Date : 27.01.2018											   *
+#/*********************************************************************/
 //Some Windows Headers (For Time, IO, etc.)
 //#include <windows.h>
 //#include <mmsystem.h>
@@ -10,6 +20,8 @@
 #include "maths_funcs.h" //Anton's math class
 #include "mesh.h"
 #include "model.h"
+#include "shader_m.h"
+#include "filesystem.h"
 
 #include <string> 
 #include <fstream>
@@ -27,8 +39,8 @@ using namespace std;
 GLuint shaderProgramID;
 
 unsigned int teapot_vao = 0;
-int width = 1024.0;
-int height = 768.0;
+int width = 800.0;
+int height = 600.0;
 GLuint loc1;
 GLuint loc2;
 
@@ -83,6 +95,137 @@ std::string readShaderSource(const std::string& fileName){
 	file.close();
 
 	return stream.str();
+}
+
+
+// loads a cubemap texture from 6 individual texture faces
+// order:
+// +X (right)
+// -X (left)
+// +Y (top)
+// -Y (bottom)
+// +Z (front) 
+// -Z (back)
+// -------------------------------------------------------
+unsigned int loadCubemap(vector<std::string> faces)
+{
+	unsigned int textureID;
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+
+	int width, height, nrComponents;
+	for (unsigned int i = 0; i < faces.size(); i++)
+	{
+		unsigned char *data = stbi_load(faces[i].c_str(), &width, &height, &nrComponents, 0);
+		if (data)
+		{
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+			stbi_image_free(data);
+		}
+		else
+		{
+			std::cout << "Cubemap texture failed to load at path: " << faces[i] << std::endl;
+			stbi_image_free(data);
+		}
+	}
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+	return textureID;
+}
+
+void generate_skyBox() {
+
+	Shader skyboxShader("../shaders/skybox.vs", "../shaders/skybox.fs");
+	float skyboxVertices[] = {
+		// positions          
+		-1.0f,  1.0f, -1.0f,
+		-1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f,
+		1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
+		1.0f,  1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
+		1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		-1.0f,  1.0f, -1.0f,
+		1.0f,  1.0f, -1.0f,
+		1.0f,  1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		1.0f, -1.0f,  1.0f
+	};
+
+	// skybox VAO
+	unsigned int skyboxVAO, skyboxVBO;
+	glGenVertexArrays(1, &skyboxVAO);
+	glGenBuffers(1, &skyboxVBO);
+	glBindVertexArray(skyboxVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+	// load textures
+	// -------------
+	vector<std::string> faces
+	{
+		FileSystem::getPath("skybox/midnight/right.tga"),
+		FileSystem::getPath("skybox/midnight/left.tga"),
+		FileSystem::getPath("skybox/midnight/top.jpg"),
+		FileSystem::getPath("skybox/midnight/bottom.tga"),
+		FileSystem::getPath("skybox/midnight/front.tga"),
+		FileSystem::getPath("skybox/midnight/back.tga"),
+	};
+	unsigned int cubemapTexture = loadCubemap(faces);
+
+	skyboxShader.use();
+	skyboxShader.setInt("skybox", 0);
+
+	// draw skybox as last
+	glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
+	skyboxShader.use();
+	glm::mat4 view;
+	glm::mat4 projection;
+	skyboxShader.setMat4("view", view);
+	skyboxShader.setMat4("projection", projection);
+	// skybox cube
+	glBindVertexArray(skyboxVAO);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+	glDepthFunc(GL_LESS);
+
 }
 
 static void AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType) {
@@ -154,6 +297,7 @@ GLuint CompileShaders() {
     glUseProgram(shaderProgramID);
 
 	return shaderProgramID;
+	
 }
 #pragma endregion SHADER_FUNCTIONS
 
@@ -192,7 +336,6 @@ void setLighting(){
 	glUniform3fv(Kd_loc, 1, Kd.v);
 	glUniform3fv(Ka_loc, 1, Ka.v);
 }
-
 
 
 void display(){
@@ -257,8 +400,10 @@ void display(){
 	glUniformMatrix4fv(view_mat_location, 1, GL_FALSE, view.m);
 	glUniformMatrix4fv(matrix_location, 1, GL_FALSE, global_prop.m);
 	ourPropeller->Draw(shaderProgramID);
+	generate_skyBox();
     glutSwapBuffers();
 }
+
 
 
 void quaternionUpdate (int sign, vec3 dir){

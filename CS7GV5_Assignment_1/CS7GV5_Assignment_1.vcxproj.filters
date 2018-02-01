@@ -15,24 +15,33 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\Desktop\Real-Time-Animation-and-Rendering\Assignment 1\main.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Desktop\Real-Time-Animation-and-Rendering\Assignment 1\maths_funcs.cpp">
+    <ClCompile Include="maths_funcs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\Desktop\Real-Time-Animation-and-Rendering\Assignment 1\maths_funcs.h">
+    <ClInclude Include="maths_funcs.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Desktop\Real-Time-Animation-and-Rendering\Assignment 1\mesh.h">
+    <ClInclude Include="mesh.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Desktop\Real-Time-Animation-and-Rendering\Assignment 1\model.h">
+    <ClInclude Include="model.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Desktop\Real-Time-Animation-and-Rendering\Assignment 1\stb_image.h">
+    <ClInclude Include="stb_image.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="shader_m.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="filesystem.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="root_directory.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
