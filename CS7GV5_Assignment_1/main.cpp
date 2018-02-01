@@ -199,12 +199,12 @@ void generate_skyBox() {
 	// -------------
 	vector<std::string> faces
 	{
-		FileSystem::getPath("skybox/midnight/right.tga"),
-		FileSystem::getPath("skybox/midnight/left.tga"),
+		FileSystem::getPath("skybox/midnight/right.jpg"),
+		FileSystem::getPath("skybox/midnight/left.jpg"),
 		FileSystem::getPath("skybox/midnight/top.jpg"),
-		FileSystem::getPath("skybox/midnight/bottom.tga"),
-		FileSystem::getPath("skybox/midnight/front.tga"),
-		FileSystem::getPath("skybox/midnight/back.tga"),
+		FileSystem::getPath("skybox/midnight/bottom.jpg"),
+		FileSystem::getPath("skybox/midnight/front.jpg"),
+		FileSystem::getPath("skybox/midnight/back.jpg"),
 	};
 	unsigned int cubemapTexture = loadCubemap(faces);
 
